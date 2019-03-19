@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'Laravel: ' . app()->version();
 });
+
+Route::resource('real-estates', 'RealEstatesController')->only([
+    'index', 'show', 'store'
+]);
