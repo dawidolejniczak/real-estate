@@ -4,6 +4,7 @@ namespace App\Extensions;
 
 
 use App\Criteria\CriteriaInterface;
+use App\Exceptions\ModelDoesNotExistException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -72,6 +73,23 @@ abstract class AbstractRepository
         $this->reset();
 
         return $result;
+    }
+
+    /**
+     * @param int $id
+     * @return Model|null
+     * @throws ModelDoesNotExistException
+     */
+    public function findOneAndCheckIfExists(int $id): ?Model
+    {
+        $result = $this->find($id)->getOne();
+
+        if (!$result) {
+            throw new ModelDoesNotExistException();
+        }
+
+        return $result;
+
     }
 
 
