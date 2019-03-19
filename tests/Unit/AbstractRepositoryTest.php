@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Criteria\CriteriaInterface;
 
-class AbstractRepositoryTest extends \Tests\TestCase
+final class AbstractRepositoryTest extends \Tests\TestCase
 {
 
     public function testGetOne(): void
