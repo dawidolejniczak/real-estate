@@ -11,6 +11,6 @@ class RealEstatesSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Models\RealEstate::class, 100)->create();
+        factory(\App\Models\RealEstate::class, 5)->create();
     }
 }

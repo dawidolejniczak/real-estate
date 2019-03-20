@@ -22,7 +22,7 @@ final class RealEstatesTest extends TestCase
             ->assertJsonFragment([
                 'id' => $realEstate->id
             ])
-            ->assertJsonCount(100)
+            ->assertJsonCount(5)
             ->assertStatus(200);
 
     }
@@ -65,7 +65,7 @@ final class RealEstatesTest extends TestCase
      */
     private function _seedRealEstates(): Collection
     {
-        $realEstates = factory(RealEstate::class, 100)->create();
+        $realEstates = factory(RealEstate::class, 5)->create();
 
         return $realEstates;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RealEstate;
 use App\Repositories\RealEstateRepository;
+use App\Services\GoogleMapsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -25,14 +26,19 @@ final class RealEstatesController extends Controller
         $this->realEstateRepository = $realEstateRepository;
     }
 
+
     /**
      * @return JsonResponse
      */
     public function index(): JsonResponse
     {
         try {
-            $schools = $this->realEstateRepository->getAll();
-            return response()->json($schools);
+            $realEstates = $this->realEstateRepository->getAll();
+            $realEstates->map(function (RealEstate $realEstate) {
+                $realEstate->assignCoordinates();
+            });
+
+            return response()->json($realEstates);
 
         } catch (\Exception $exception) {
             return $this->respondWithException($exception);
@@ -43,13 +49,16 @@ final class RealEstatesController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function show(int $id): JsonResponse
     {
         try {
-            $school = $this->realEstateRepository->findOneAndCheckIfExists($id);
+            /** @var RealEstate $realEstate */
+            $realEstate = $this->realEstateRepository->findOneAndCheckIfExists($id);
+            $realEstate->assignCoordinates();
 
-            return response()->json($school->toArray());
+            return response()->json($realEstate->toArray());
         } catch (\Exception $exception) {
             return $this->respondWithException($exception);
         }
@@ -58,6 +67,7 @@ final class RealEstatesController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function store(Request $request): JsonResponse
     {
@@ -65,9 +75,11 @@ final class RealEstatesController extends Controller
             $validator = Validator::make($request->all(), RealEstate::$rules);
             $this->checkValidation($validator);
 
-            $school = $this->realEstateRepository->create($request->all());
+            /** @var RealEstate $realEstate */
+            $realEstate = $this->realEstateRepository->create($request->all());
+            $realEstate->assignCoordinates();
 
-            return response()->json($school->toArray());
+            return response()->json($realEstate->toArray());
         } catch (\Exception $exception) {
             return $this->respondWithException($exception);
         }
