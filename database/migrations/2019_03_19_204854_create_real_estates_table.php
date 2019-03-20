@@ -19,6 +19,8 @@ class CreateRealEstatesTable extends Migration
             $table->string('address_line_2');
             $table->string('city');
             $table->string('postcode');
+            $table->float('lat', 10, 7);
+            $table->float('lng', 10, 7);
             $table->timestamps();
         });
     }

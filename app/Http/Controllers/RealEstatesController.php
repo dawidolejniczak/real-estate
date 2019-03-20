@@ -34,9 +34,6 @@ final class RealEstatesController extends Controller
     {
         try {
             $realEstates = $this->realEstateRepository->getAll();
-            $realEstates->map(function (RealEstate $realEstate) {
-                $realEstate->assignCoordinates();
-            });
 
             return response()->json($realEstates);
 
@@ -49,14 +46,11 @@ final class RealEstatesController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function show(int $id): JsonResponse
     {
         try {
-            /** @var RealEstate $realEstate */
             $realEstate = $this->realEstateRepository->findOneAndCheckIfExists($id);
-            $realEstate->assignCoordinates();
 
             return response()->json($realEstate->toArray());
         } catch (\Exception $exception) {
@@ -75,9 +69,7 @@ final class RealEstatesController extends Controller
             $validator = Validator::make($request->all(), RealEstate::$rules);
             $this->checkValidation($validator);
 
-            /** @var RealEstate $realEstate */
             $realEstate = $this->realEstateRepository->create($request->all());
-            $realEstate->assignCoordinates();
 
             return response()->json($realEstate->toArray());
         } catch (\Exception $exception) {
